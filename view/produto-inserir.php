@@ -7,13 +7,15 @@ include 'cabecalho.php';?>
     if ($_POST){
         $p = new \App\Model\Produto();
         $p->setDescricao($_POST['descricao']);
-        $p->setValor($_POST['valor']);
-        $p->setQuantidade($_POST['quantidade']);
-        $p->setValidade($_POST['validade']);
+        $p->setQuantidade(\App\Helper\Moeda::set($_POST['quantidade']));
+
+        !empty($_POST{'valor'}) ? $p->setValor(App\Helper\Moeda::set($_POST['valor'])) : $p->setValor(null);
+        !empty($_POST{'validade'}) ? $p->setValidade(App\Helper\Data::set($_POST['validade'])) : $p->setValidade(null);
 
         $pDAO = new \App\DAO\ProdutoDAO();
         if ($pDAO->inserir($p))
-            echo "<div class='alert alert-success'>Produto cadastrado com sucesso!</div>"
+            echo "<div class='alert alert-success'>Produto cadastrado com sucesso!</div>";
+        
     }
 ?>
 <form action="produto-inserir.php" method="post">
