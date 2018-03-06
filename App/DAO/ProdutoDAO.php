@@ -33,14 +33,15 @@ class ProdutoDAO extends Conexao
         $sql = "select * from produtos where descricao like :descricao";
         try {
             $p = $this->conexao->prepare($sql);
-            $p->bindValue(":descricao", "%".$produto->getDescricao()."%");
+            $p->bindValue(":descricao", "%" . $produto->getDescricao() . "%");
             $p->execute();
             return $p->fetchAll(\PDO::FETCH_CLASS, "\App\Model\Produto");
-        } catch (\PDOException $e){
+        } catch (\PDOException $e) {
             echo "<div class='alert alert-danger'>";
             $e->getMessage();
         }
     }
+
     public function excluir($produto)
     {
         $sql = "delete from produtos where id = :id";
@@ -54,5 +55,36 @@ class ProdutoDAO extends Conexao
         }
 
     }
-}
 
+    public function pesquisarUm($produto)
+    {
+        $sql = "select * from produtos WHERE  id = :id";
+        try {
+            $p = $this->conexao->prepare($sql);
+            $p->bindValue("id", $produto->getId());
+            $p->execute();
+            return $p->fetch(\PDO::FETCH_ASSOC);
+
+        } catch (\PDOException $e) {
+            echo "<div class='alert alert-danger'>{$e->getMessage()}</div>";
+        }
+    }
+
+    public function alterar($produto)
+    {
+        $sql = "update produtos set descricao = :descricao, quantidade = :quantidade, valor = :valor, validade = :validade where id = :id";
+        try {
+            $i = $this->conexao->prepare($sql);
+            $i->bindValue(":id", $produto->getId());
+            $i->bindValue(":descricao", $produto->getDescricao());
+            $i->bindValue(":quantidade", $produto->getQuantidade());
+            $i->bindValue(":valor", $produto->getValor());
+            $i->bindValue(":validade", $produto->getValidade());
+            $i->execute();
+            return true;
+        } catch (\PDOException $e) {
+            echo "<div class='alert alert-danger'>($e->getMessage()}</div>";
+        }
+    }
+
+}
