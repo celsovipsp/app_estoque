@@ -23,7 +23,7 @@ class ProdutoDAO extends Conexao
             $i->execute();
             return true;
         } catch (\PDOException $e) {
-            echo "<div class='alert alert-danger'>($e->getMessage()}</div>";
+            echo "<div class='alert alert-danger'>($e->getMessage()</div>";
         }
 
     }
